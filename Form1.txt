@@ -1,0 +1,221 @@
+﻿using System;
+using System.Globalization;
+using System.Windows.Forms;
+
+namespace hesapmakinesi
+{
+    public partial class Form1 : Form
+    {
+        double ilkSayi = 0;
+        string islem = "";
+        bool yeniSayi = true;
+
+
+        public Form1()
+        {
+            InitializeComponent();
+            // Sayı butonları
+            btn0.Click += Sayi_Click;
+            btn1.Click += Sayi_Click;
+            btn2.Click += Sayi_Click;
+            btn3.Click += Sayi_Click;
+            btn4.Click += Sayi_Click;
+            btn5.Click += Sayi_Click;
+            btn6.Click += Sayi_Click;
+            btn7.Click += Sayi_Click;
+            btn8.Click += Sayi_Click;
+            btn9.Click += Sayi_Click;
+
+            // İşlem butonları
+            btnToplama.Click += Islem_Click;
+            btnCikarma.Click += Islem_Click;
+            btnCarpma.Click += Islem_Click;
+            btnBolme.Click += Islem_Click;
+
+            // Diğer butonlar
+            btnEsittir.Click += btnEsittir_Click;
+            btnC.Click += btnC_Click;
+            btnGeri.Click += btnGeri_Click;
+            btnYuzde.Click += btnYuzde_Click;
+            btnVirgul.Click += btnVirgul_Click;
+
+        }
+
+        // 0-9 butonları
+        private void Sayi_Click(object sender, EventArgs e)
+        {
+            Button buton = (Button)sender;
+
+            if (yeniSayi || txtEkran.Text == "0")
+            {
+                txtEkran.Text = buton.Text;
+                yeniSayi = false;
+            }
+            else
+            {
+                txtEkran.Text += buton.Text;
+            }
+        }
+
+        // =========================================
+        // VİRGÜL
+        // =========================================
+
+        private void btnVirgul_Click(object sender, EventArgs e)
+        {
+            if (yeniSayi)
+            {
+                txtEkran.Text = "0,";
+                yeniSayi = false;
+            }
+            else if (!txtEkran.Text.Contains(","))
+            {
+                txtEkran.Text += ",";
+            }
+        }
+
+        // =========================================
+        // İŞLEM BUTONLARI
+        // =========================================
+
+        private void Islem_Click(object sender, EventArgs e)
+        {
+            Button buton = (Button)sender;
+
+            double.TryParse(
+                txtEkran.Text,
+                NumberStyles.Any,
+                CultureInfo.GetCultureInfo("tr-TR"),
+                out ilkSayi
+            );
+
+            islem = buton.Text;
+
+            yeniSayi = true;
+        }
+
+        // =========================================
+        // EŞİTTİR
+        // =========================================
+
+        private void btnEsittir_Click(object sender, EventArgs e)
+        {
+            double ikinciSayi;
+
+            if (!double.TryParse(
+                txtEkran.Text,
+                NumberStyles.Any,
+                CultureInfo.GetCultureInfo("tr-TR"),
+                out ikinciSayi))
+            {
+                txtEkran.Text = "Hata";
+                return;
+            }
+
+            double sonuc = 0;
+
+            switch (islem)
+            {
+                case "+":
+                    sonuc = ilkSayi + ikinciSayi;
+                    break;
+
+                case "-":
+                    sonuc = ilkSayi - ikinciSayi;
+                    break;
+
+                case "*":
+                    sonuc = ilkSayi * ikinciSayi;
+                    break;
+
+                case "/":
+
+                    if (ikinciSayi == 0)
+                    {
+                        MessageBox.Show(
+                            "Sıfıra bölme yapılamaz!",
+                            "Hata",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+
+                        txtEkran.Text = "0";
+                        return;
+                    }
+
+                    sonuc = ilkSayi / ikinciSayi;
+                    break;
+
+                default:
+                    return;
+            }
+
+            txtEkran.Text = sonuc.ToString(
+                "G",
+                CultureInfo.GetCultureInfo("tr-TR")
+            );
+
+            yeniSayi = true;
+            islem = "";
+        }
+
+        // =========================================
+        // C BUTONU
+        // =========================================
+
+        private void btnC_Click(object sender, EventArgs e)
+        {
+            txtEkran.Text = "0";
+
+            ilkSayi = 0;
+            islem = "";
+            yeniSayi = true;
+        }
+
+        // =========================================
+        // GERİ SİLME
+        // =========================================
+
+        private void btnGeri_Click(object sender, EventArgs e)
+        {
+            if (txtEkran.Text.Length > 1)
+            {
+                txtEkran.Text =
+                    txtEkran.Text.Substring(
+                        0,
+                        txtEkran.Text.Length - 1
+                    );
+            }
+            else
+            {
+                txtEkran.Text = "0";
+                yeniSayi = true;
+            }
+        }
+
+        // =========================================
+        // YÜZDE
+        // =========================================
+
+        private void btnYuzde_Click(object sender, EventArgs e)
+        {
+            double sayi;
+
+            if (double.TryParse(
+                txtEkran.Text,
+                NumberStyles.Any,
+                CultureInfo.GetCultureInfo("tr-TR"),
+                out sayi))
+            {
+                sayi = sayi / 100;
+
+                txtEkran.Text = sayi.ToString(
+                    "G",
+                    CultureInfo.GetCultureInfo("tr-TR")
+                );
+
+                yeniSayi = true;
+            }
+        }
+    }
+}
