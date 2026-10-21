@@ -1,0 +1,26 @@
+
+FOOTBALL SQUAD REPORT
+=====================
+
+Total player records: 5,000
+Number of teams: 20
+Average player age: 28.43
+Average overall rating: 66.70
+Average potential: 73.89
+Total goals: 9,043
+Total assists: 7,001
+Total market value: 216,322.90 million EUR
+
+Highest-rated player:
+player_name       Kerem Rossi
+team              Rome Wolves
+position                   CM
+overall_rating             95
+
+Top team by goals:
+team           Porto Dragons
+total_goals              542
+
+NOTE:
+This dataset is synthetic and intended for practice.
+It does not represent verified real-world football data.
